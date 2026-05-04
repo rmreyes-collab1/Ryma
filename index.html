@@ -2,51 +2,88 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ryma's Minecraft World 💖</title>
 
 <style>
+/* Background with overlay */
 body {
   margin: 0;
   font-family: 'Comic Sans MS', cursive;
-  background: linear-gradient(to bottom, #ffc0cb, #ffe4e1);
+  
+  /* 🌸 PUT YOUR BACKGROUND IMAGE HERE */
+  background: 
+    linear-gradient(rgba(255,192,203,0.7), rgba(255,228,225,0.7)),
+    url('minecraft-bg.jpg'); /* replace this */
+  
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Main container */
+.container {
+  width: 95%;
+  max-width: 500px;
   text-align: center;
-  overflow-x: hidden;
 }
 
 /* Header */
 header {
-  background: #ff69b4;
+  width: 100%;
+  background: linear-gradient(45deg, #ff69b4, #ff85c1);
   padding: 20px;
-  font-size: 28px;
+  font-size: 24px;
   color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 /* Stats */
 .stats {
-  font-size: 18px;
-  margin: 10px;
+  font-size: 16px;
+  margin: 15px 0;
+  background: white;
+  padding: 10px;
+  border-radius: 15px;
+  width: 100%;
+}
+
+/* Blocks container */
+.blocks {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 /* Minecraft blocks */
 .minecraft-box {
-  display: inline-block;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   background: url('https://i.imgur.com/8QfQK4B.png');
   background-size: cover;
-  margin: 10px;
+  margin: 8px;
+  border-radius: 10px;
   border: 3px solid white;
   cursor: pointer;
-  transition: 0.2s;
+  transition: transform 0.2s;
 }
 
 .minecraft-box:hover {
   transform: scale(1.1);
 }
 
+.minecraft-box:active {
+  transform: scale(0.9);
+}
+
 /* Gallery */
 .gallery img {
-  width: 160px;
+  width: 100%;
+  max-width: 200px;
   border-radius: 15px;
   margin: 10px;
   border: 3px solid white;
@@ -54,32 +91,52 @@ header {
 
 /* Pets */
 .pet {
-  font-size: 40px;
+  font-size: 35px;
   cursor: pointer;
-  margin: 10px;
+  margin: 8px;
 }
 
 /* Button */
 button {
-  background: #ff69b4;
+  width: 80%;
+  max-width: 250px;
+  background: linear-gradient(45deg, #ff69b4, #ff85c1);
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 12px;
+  border-radius: 12px;
   cursor: pointer;
+  font-size: 16px;
+}
+
+/* Message */
+#message {
+  min-height: 25px;
 }
 
 /* Floating hearts */
 .heart {
   position: fixed;
   bottom: -20px;
-  animation: floatUp 5s linear;
+  animation: floatUp 4s ease-out forwards;
 }
 
 @keyframes floatUp {
   to {
-    transform: translateY(-800px);
+    transform: translateY(-600px);
     opacity: 0;
+  }
+}
+
+/* 📱 Mobile tweaks */
+@media (max-width: 480px) {
+  header {
+    font-size: 20px;
+  }
+
+  .minecraft-box {
+    width: 70px;
+    height: 70px;
   }
 }
 </style>
@@ -91,85 +148,90 @@ button {
 🌸 Ryma's Minecraft Princess World 🌸
 </header>
 
+<div class="container">
+
 <div class="stats">
 💎 Diamonds: <span id="diamonds">0</span> |
 🐾 Pets: <span id="pets">0</span>
 </div>
 
-<h2>Click the blocks to collect rewards! 🎮</h2>
+<h3>Click the blocks! 🎮</h3>
 
-<div>
-  <div class="minecraft-box" onclick="mineBlock()"></div>
-  <div class="minecraft-box" onclick="mineBlock()"></div>
-  <div class="minecraft-box" onclick="mineBlock()"></div>
+<div class="blocks">
+  <div class="minecraft-box" onclick="mineBlock(this)"></div>
+  <div class="minecraft-box" onclick="mineBlock(this)"></div>
+  <div class="minecraft-box" onclick="mineBlock(this)"></div>
 </div>
 
 <h3 id="message"></h3>
 
 <button onclick="unlockPet()">Unlock Pet 🐾</button>
 
-<h2>Ryma's Pets 🐶</h2>
+<h3>Ryma's Pets 🐶</h3>
 <div id="petArea"></div>
 
-<h2>Ryma's Gallery 💖</h2>
+<h3>Ryma's Gallery 💖</h3>
 <div class="gallery">
   <img src="ryma.jpg">
+</div>
+
 </div>
 
 <script>
 let diamonds = 0;
 let pets = 0;
 
-function mineBlock() {
-  const rewards = [
-    "💎", "💎", "💎",
-    "🐷", "🌸"
-  ];
-
+function mineBlock(el) {
+  const rewards = ["💎","💎","💎","🐷","🌸"];
   const result = rewards[Math.floor(Math.random() * rewards.length)];
 
-  if (result === "💎") {
-    diamonds++;
-  }
+  el.style.transform = "scale(0.9)";
+  setTimeout(() => el.style.transform = "scale(1)", 100);
 
-  document.getElementById("diamonds").innerText = diamonds;
-  document.getElementById("message").innerText = "You found " + result + "!";
+  if (result === "💎") diamonds++;
 
+  updateStats();
+  showMessage("You found " + result + "!");
   createHeart();
 }
 
 function unlockPet() {
   if (diamonds < 3) {
-    alert("You need 3 diamonds! 💎");
+    showMessage("Need 3 diamonds! 💎");
     return;
   }
 
   diamonds -= 3;
   pets++;
 
-  document.getElementById("diamonds").innerText = diamonds;
-  document.getElementById("pets").innerText = pets;
+  updateStats();
 
   const pet = document.createElement("span");
   pet.className = "pet";
   pet.innerText = "🐶";
 
-  pet.onclick = function () {
-    alert("Woof! Ryma's pet loves you! 💖");
-  };
+  pet.onclick = () => showMessage("Woof! 💖");
 
   document.getElementById("petArea").appendChild(pet);
 }
 
-/* Hearts animation */
+function updateStats() {
+  document.getElementById("diamonds").innerText = diamonds;
+  document.getElementById("pets").innerText = pets;
+}
+
+function showMessage(text) {
+  document.getElementById("message").innerText = text;
+}
+
 function createHeart() {
   const heart = document.createElement("div");
   heart.className = "heart";
   heart.innerText = "💖";
   heart.style.left = Math.random() * 100 + "vw";
-  document.body.appendChild(heart);
 
-  setTimeout(() => heart.remove(), 5000);
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 4000);
 }
 </script>
 
