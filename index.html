@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ryma's Minecraft World 💖</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Comic Sans MS', cursive;
+  background: linear-gradient(to bottom, #ffc0cb, #ffe4e1);
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* Header */
+header {
+  background: #ff69b4;
+  padding: 20px;
+  font-size: 28px;
+  color: white;
+}
+
+/* Stats */
+.stats {
+  font-size: 18px;
+  margin: 10px;
+}
+
+/* Minecraft blocks */
+.minecraft-box {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background: url('https://i.imgur.com/8QfQK4B.png');
+  background-size: cover;
+  margin: 10px;
+  border: 3px solid white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.minecraft-box:hover {
+  transform: scale(1.1);
+}
+
+/* Gallery */
+.gallery img {
+  width: 160px;
+  border-radius: 15px;
+  margin: 10px;
+  border: 3px solid white;
+}
+
+/* Pets */
+.pet {
+  font-size: 40px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+/* Button */
+button {
+  background: #ff69b4;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Floating hearts */
+.heart {
+  position: fixed;
+  bottom: -20px;
+  animation: floatUp 5s linear;
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-800px);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+🌸 Ryma's Minecraft Princess World 🌸
+</header>
+
+<div class="stats">
+💎 Diamonds: <span id="diamonds">0</span> |
+🐾 Pets: <span id="pets">0</span>
+</div>
+
+<h2>Click the blocks to collect rewards! 🎮</h2>
+
+<div>
+  <div class="minecraft-box" onclick="mineBlock()"></div>
+  <div class="minecraft-box" onclick="mineBlock()"></div>
+  <div class="minecraft-box" onclick="mineBlock()"></div>
+</div>
+
+<h3 id="message"></h3>
+
+<button onclick="unlockPet()">Unlock Pet 🐾</button>
+
+<h2>Ryma's Pets 🐶</h2>
+<div id="petArea"></div>
+
+<h2>Ryma's Gallery 💖</h2>
+<div class="gallery">
+  <img src="ryma.jpg">
+</div>
+
+<script>
+let diamonds = 0;
+let pets = 0;
+
+function mineBlock() {
+  const rewards = [
+    "💎", "💎", "💎",
+    "🐷", "🌸"
+  ];
+
+  const result = rewards[Math.floor(Math.random() * rewards.length)];
+
+  if (result === "💎") {
+    diamonds++;
+  }
+
+  document.getElementById("diamonds").innerText = diamonds;
+  document.getElementById("message").innerText = "You found " + result + "!";
+
+  createHeart();
+}
+
+function unlockPet() {
+  if (diamonds < 3) {
+    alert("You need 3 diamonds! 💎");
+    return;
+  }
+
+  diamonds -= 3;
+  pets++;
+
+  document.getElementById("diamonds").innerText = diamonds;
+  document.getElementById("pets").innerText = pets;
+
+  const pet = document.createElement("span");
+  pet.className = "pet";
+  pet.innerText = "🐶";
+
+  pet.onclick = function () {
+    alert("Woof! Ryma's pet loves you! 💖");
+  };
+
+  document.getElementById("petArea").appendChild(pet);
+}
+
+/* Hearts animation */
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerText = "💖";
+  heart.style.left = Math.random() * 100 + "vw";
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 5000);
+}
+</script>
+
+</body>
+</html>
